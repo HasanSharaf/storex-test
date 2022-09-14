@@ -12,11 +12,10 @@ use Illuminate\Support\Facades\DB;
 class MoviesController extends Controller
 {
 
-    // Get all movies
-    public function index(Request $request)
-    {
 
-        $movie = Movie::where('id', '>', 0);
+    public function filter(Request $request)
+    {
+        $movie = Movie::query();
         if ($request->name) {
             $movie = $movie->where('title', $request->name);
         }
@@ -27,9 +26,15 @@ class MoviesController extends Controller
         if ($request->rate) {
             $movie = $movie->where('rate', $request->rate);
         }
-        
-        $movie = $movie->orderBy('id')->paginate(15);
         return $movie;
+    }
+
+    // Get all movies
+    public function index(Request $request, Movie $movie)
+    {
+        $movieQuery = $this->filter($request);
+        $movie = $movieQuery->orderBy('id')->paginate(15);
+        return $movie->all();
     }
 
     // Create a new movie
@@ -37,8 +42,8 @@ class MoviesController extends Controller
     {
         $movie = new Movie($request->all());
         $movie->save();
-        return $movie;
-        return response()->json(
+
+        return $movie->response()->json(
             [
                 'data' => null,
                 'message' => 'Movie created successfully',
@@ -51,10 +56,7 @@ class MoviesController extends Controller
     // Update a movie with id
     public function update(Request $request, $id)
     {
-        $movie = Movie::find($id);
-        $movie->title = $request->title;
-        $movie->description = $request->description;
-        $movie->save();
+        $movie = Movie::find($id)->update($request->all());
 
         return response()->json(
             [
