@@ -46,7 +46,7 @@ class MoviesController extends Controller
         if ($file = $request->file('image')) {
             $filename = date('YmdHi') . $file->getClientOriginalName();
             $path = $file->move(public_path('public/files'), $filename);
-            $movie->image = $path;
+            $movie->image = 'public/files/' . $filename;
             $movie->save();
         }
         $movie->save();
@@ -64,8 +64,13 @@ class MoviesController extends Controller
     // Update a movie with id
     public function update(Request $request, $id)
     {
-        $movie = Movie::find($id)->update($request->all());
-
+        $movie = Movie::find($id);
+        if ($file = $request->file('image')) {
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $path = $file->move(public_path('public/files'), $filename);
+            $movie->image = 'public/files/' . $filename;
+        }
+        $movie->update([$request->all(),'image'=>$movie->image]);
         return response()->json(
             [
                 'data' => $movie,
