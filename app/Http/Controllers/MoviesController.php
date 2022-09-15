@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Filter;
 use App\Models\Movie;
 use Illuminate\Database\Console\Migrations\StatusCommand;
@@ -9,10 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+
 class MoviesController extends Controller
 {
 
-
+    // Movies Filter
     public function filter(Request $request)
     {
         $movie = Movie::query();
@@ -30,10 +32,10 @@ class MoviesController extends Controller
     }
 
     // Get all movies
-    public function index(Request $request, Movie $movie)
+    public function index(Request $request, Movie $movie, $data)
     {
         $movieQuery = $this->filter($request);
-        $movie = $movieQuery->orderBy('id')->paginate(15);
+        $movie = $movieQuery->orderBy('id')->paginate(10);
         return $movie->all();
     }
 
@@ -41,9 +43,15 @@ class MoviesController extends Controller
     public function create(Request $request)
     {
         $movie = new Movie($request->all());
+        if ($file = $request->file('image')) {
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $path = $file->move(public_path('public/files'), $filename);
+            $movie->image = $path;
+            $movie->save();
+        }
         $movie->save();
 
-        return $movie->response()->json(
+        return response()->json(
             [
                 'data' => null,
                 'message' => 'Movie created successfully',
