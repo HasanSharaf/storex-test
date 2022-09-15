@@ -46,6 +46,7 @@ class AuthTokenController extends Controller
             ]);
 
             return response()->json([
+                'data' => $user,
                 'status' => true,
                 'message' => 'User Created Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken,
@@ -93,6 +94,7 @@ class AuthTokenController extends Controller
             $user = User::where('email', $request->email)->first();
 
             return response()->json([
+                'data' => $user,
                 'status' => true,
                 'message' => 'User Logged In Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken,

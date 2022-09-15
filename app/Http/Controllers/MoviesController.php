@@ -53,7 +53,7 @@ class MoviesController extends Controller
 
         return response()->json(
             [
-                'data' => null,
+                'data' => $movie,
                 'message' => 'Movie created successfully',
                 'status' => 201
             ],
@@ -68,7 +68,7 @@ class MoviesController extends Controller
 
         return response()->json(
             [
-                'data' => null,
+                'data' => $movie,
                 'message' => 'Movie updated successfully',
                 'status' => 200
             ],

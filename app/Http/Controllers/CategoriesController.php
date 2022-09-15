@@ -20,7 +20,7 @@ class CategoriesController extends Controller
         return $category;
         return response()->json(
             [
-                'data' => null,
+                'data' => $category,
                 'message' => 'Category created successfully',
                 'status' => 201
             ],
@@ -36,7 +36,7 @@ class CategoriesController extends Controller
 
         return response()->json(
             [
-                'data' => null,
+                'data' => $category,
                 'message' => 'Category updated successfully',
                 'status' => 200
             ],
